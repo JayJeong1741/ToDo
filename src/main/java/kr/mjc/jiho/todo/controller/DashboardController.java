@@ -3,6 +3,7 @@ package kr.mjc.jiho.todo.controller;
 import kr.mjc.jiho.todo.Entity.Todo;
 import kr.mjc.jiho.todo.Entity.User;
 import kr.mjc.jiho.todo.dto.CalendarDay;
+import kr.mjc.jiho.todo.dto.CalendarTodoItem;
 import kr.mjc.jiho.todo.repository.TodoRepository;
 import kr.mjc.jiho.todo.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -32,31 +33,44 @@ public class DashboardController {
         LocalDate now = LocalDate.now();
         YearMonth yearMonth = YearMonth.from(now);
 
+        // ✅ 1일의 요일 계산
+        LocalDate firstDay = yearMonth.atDay(1);
+        int dayOfWeek = firstDay.getDayOfWeek().getValue(); // 월=1 ... 일=7
+        int blankDaysBefore = dayOfWeek % 7; // ✅ 일요일=0, 월=1 ... 토=6
+
         List<CalendarDay> calendarDays = new ArrayList<>();
 
         for (int i = 1; i <= yearMonth.lengthOfMonth(); i++) {
             LocalDate date = yearMonth.atDay(i);
 
-            // ✅ 날짜별 Todo 조회
             List<Todo> todos =
                     todoRepository.findByUserAndDueDateOrderByStartTimeAsc(user, date);
 
-            // ✅ 제목만 추출
-            List<String> titles = todos.stream()
-                    .map(Todo::getTitle)
-                    .toList();
+            List<CalendarTodoItem> todoItems =
+                    todos.stream()
+                            .map(todo -> new CalendarTodoItem(
+                                    todo.getTitle(),
+                                    todo.isCompleted()
+                            ))
+                            .toList();
+
 
             calendarDays.add(new CalendarDay(
                     i,
                     date,
                     date.equals(now),
-                    titles
+                    todoItems   // ✅ 여기 변경
             ));
+
         }
 
         model.addAttribute("loginUser", user);
         model.addAttribute("calendarDays", calendarDays);
 
+        // ✅ 이 한 줄이 핵심
+        model.addAttribute("blankDaysBefore", blankDaysBefore);
+
         return "dashboard";
     }
+
 }

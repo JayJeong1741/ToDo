@@ -18,5 +18,5 @@ public class CalendarDay {
     private boolean today;
 
     // ✅ 날짜별 할 일 "제목 리스트"
-    private List<String> titles;
+    private List<CalendarTodoItem> todos;
 }
