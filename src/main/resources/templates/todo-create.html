@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>새 할 일</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * { box-sizing: border-box; font-family: system-ui, sans-serif; }
+
+        body {
+            margin: 0;
+            background: #f7f8fa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 420px;
+            margin-top: 50px;
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 26px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        textarea {
+            resize: none;
+            height: 90px;
+        }
+
+        .time-box {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .time-box input {
+            flex: 1;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px;
+            border-radius: 14px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .save-btn {
+            background: #111;
+            color: #fff;
+        }
+
+        .cancel-btn {
+            background: #eee;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app">
+
+    <div class="header">
+        <h2>새 할 일 추가</h2>
+    </div>
+
+    <form th:action="@{/todos}"
+          th:object="${todoCreateRequest}"
+          method="post">
+
+        <label>제목</label>
+        <input type="text" th:field="*{title}" required>
+
+        <label>설명</label>
+        <textarea th:field="*{description}"></textarea>
+
+        <label>날짜</label>
+        <input type="date" th:field="*{dueDate}" required>
+
+        <label>시간</label>
+        <div class="time-box">
+            <input type="time" th:field="*{startTime}" required>
+            <span>~</span>
+            <input type="time" th:field="*{endTime}" required>
+        </div>
+
+        <div class="buttons">
+            <button type="submit" class="save-btn">저장</button>
+            <a th:href="@{/dashboard}" style="flex:1;">
+                <button type="button" class="cancel-btn">취소</button>
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

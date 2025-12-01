@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * { box-sizing: border-box; font-family: system-ui, sans-serif; }
+
+        body {
+            margin: 0;
+            background: #f7f8fa;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 860px;          /* ✅ 전체도 크게 */
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 28px;
+            padding: 28px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .header {
+            position: relative;
+            text-align: center;
+            margin-bottom: 26px;
+        }
+
+        .top-actions {
+            position: absolute;
+            right: 0;
+            top: 0;
+            display: flex;
+            gap: 8px;
+        }
+
+        .add-btn, .logout-btn {
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: none;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .add-btn { background: #111; color: #fff; }
+        .logout-btn { background: #eee; color: #333; }
+
+        /* ✅ 요일 */
+        .week {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 13px;
+            color: #777;
+            font-weight: 600;
+        }
+
+        /* ✅ 달력 크기 확대 */
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 14px;
+        }
+
+        .day {
+            min-height: 150px;       /* ✅ 기존보다 훨씬 크게 */
+            padding: 10px;
+            border-radius: 16px;
+            background: #f1f2f4;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: background .15s, transform .15s;
+        }
+
+        .day:hover {
+            background: #111;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .today {
+            border: 3px solid #111;
+        }
+
+        .day-number {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        /* ✅ 날짜 안에 들어가는 Todo 제목 */
+        .todo-title {
+            font-size: 12px;
+            background: rgba(0,0,0,0.08);
+            border-radius: 8px;
+            padding: 4px 6px;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .day:hover .todo-title {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .empty {
+            font-size: 11px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app">
+
+    <!-- ✅ 상단 -->
+    <div class="header">
+
+        <h2 th:text="|${loginUser.name}의 달력|">나의 달력</h2>
+
+        <div class="top-actions">
+            <a th:href="@{/todos/create}">
+                <button type="button" class="add-btn">+ 새 할 일</button>
+            </a>
+
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">로그아웃</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ✅ 요일 -->
+    <div class="week">
+        <div>일</div><div>월</div><div>화</div><div>수</div>
+        <div>목</div><div>금</div><div>토</div>
+    </div>
+
+    <!-- ✅ 달력 -->
+    <div class="calendar">
+
+        <div th:each="day : ${calendarDays}"
+             class="day"
+             th:classappend="${day.today}? 'today' : ''"
+             th:onclick="|location.href='@{/todos(date=${day.date})}'|">
+
+            <div class="day-number" th:text="${day.day}">1</div>
+
+            <!-- ✅ 해당 날짜 Todo 제목들 -->
+            <div th:if="${#lists.isEmpty(day.titles)}"
+                 class="empty">
+                할 일 없음
+            </div>
+
+            <div th:each="title : ${day.titles}"
+                 class="todo-title"
+                 th:text="${title}">
+                제목
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
