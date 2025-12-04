@@ -6,13 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
-        * { box-sizing: border-box; font-family: system-ui, sans-serif; }
-        body { margin: 0; background: #f7f8fa; display: flex; justify-content: center; }
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f7f8fa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 16px;
+        }
 
         .app {
             width: 100%;
             max-width: 420px;
-            margin-top: 40px;
+            margin-top: 32px;
             background: #fff;
             border-radius: 24px;
             padding: 24px;
@@ -21,21 +32,39 @@
 
         .header {
             text-align: center;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
+        }
+
+        .header h2 {
+            font-size: 22px;
+            margin: 0;
         }
 
         .todo-item {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
+            gap: 8px;
             padding: 12px 6px;
             border-bottom: 1px solid #eee;
         }
 
         .left {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 10px;
+            flex: 1;
+        }
+
+        .left input[type="checkbox"] {
+            margin-top: 4px;
+            transform: scale(1.1);
+            cursor: pointer;
+        }
+
+        .title {
+            font-size: 14px;
+            font-weight: 600;
         }
 
         .completed {
@@ -46,22 +75,44 @@
         .info {
             font-size: 12px;
             color: #777;
+            margin-top: 2px;
         }
 
-        .add-btn {
-            width: 100%;
-            margin-top: 16px;
-            padding: 14px;
-            border: none;
-            background: #111;
-            color: #fff;
-            border-radius: 14px;
+        .actions {
+            display: flex;
+            align-items: center;
         }
 
         .delete-btn {
             border: none;
             background: none;
             color: red;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 4px 6px;
+        }
+
+        .delete-btn:hover {
+            text-decoration: underline;
+        }
+
+        .add-btn {
+            width: 100%;
+            margin-top: 18px;
+            padding: 14px;
+            border: none;
+            background: #111;
+            color: #fff;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.15s, opacity 0.15s;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-1px);
+            opacity: 0.9;
         }
 
         .empty {
@@ -70,8 +121,39 @@
             color: #999;
             font-size: 14px;
         }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* ✅ ✅ 모바일 반응형 */
+        @media (max-width: 480px) {
+            .app {
+                padding: 20px;
+                border-radius: 18px;
+                margin-top: 20px;
+            }
+
+            .header h2 {
+                font-size: 20px;
+            }
+
+            .title {
+                font-size: 13px;
+            }
+
+            .info {
+                font-size: 11px;
+            }
+
+            .add-btn {
+                padding: 12px;
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
+
 <body>
 
 <div class="app">
@@ -97,26 +179,26 @@
                    onchange="toggleTodo(this)">
 
             <div>
-                <div th:text="${todo.title}"
+                <div class="title"
+                     th:text="${todo.title}"
                      th:classappend="${todo.completed} ? 'completed' : ''">
                     제목
                 </div>
 
                 <div class="info"
                      th:text="|${#temporals.format(todo.dueDate, 'yyyy-MM-dd')}
-                              ${#temporals.format(todo.startTime, 'HH:mm')+' ~'}
-
+                              ${#temporals.format(todo.startTime, 'HH:mm'+' ~')}
                               ${#temporals.format(todo.endTime, 'HH:mm')}|">
                     날짜/시간
                 </div>
-
             </div>
         </div>
 
-        <form th:action="@{/todos/{id}(id=${todo.id})}" method="post">
-            <button class="delete-btn">삭제</button>
-        </form>
-
+        <div class="actions">
+            <form th:action="@{/todos/{id}(id=${todo.id})}" method="post">
+                <button class="delete-btn">삭제</button>
+            </form>
+        </div>
     </div>
 
     <a th:href="@{/dashboard}">
@@ -130,7 +212,7 @@
         const id = checkbox.getAttribute("data-id");
         const completed = checkbox.checked;
 
-        const title = checkbox.closest(".left").querySelector("div");
+        const title = checkbox.closest(".left").querySelector(".title");
 
         if (completed) title.classList.add("completed");
         else title.classList.remove("completed");

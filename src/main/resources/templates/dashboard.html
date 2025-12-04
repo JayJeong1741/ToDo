@@ -6,7 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
-        * { box-sizing: border-box; font-family: system-ui, sans-serif; }
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, sans-serif;
+        }
 
         body {
             margin: 0;
@@ -104,7 +107,6 @@
             font-weight: 700;
         }
 
-        /* ✅ 날짜 안에 들어가는 Todo 제목 */
         .todo-title {
             font-size: 12px;
             background: rgba(0,0,0,0.1);
@@ -120,7 +122,6 @@
             background: rgba(255,255,255,0.25);
         }
 
-        /* ✅ 완료된 할 일 (취소선) */
         .completed {
             text-decoration: line-through;
             color: #888;
@@ -132,7 +133,6 @@
             color: #aaa;
         }
 
-        /* ✅ 요일 맞추기용 빈 칸 */
         .empty-day {
             min-height: 150px;
             padding: 10px;
@@ -140,24 +140,82 @@
             background: transparent;
             cursor: default;
         }
+
+        /* ✅ ✅ 반응형 패치 */
+
+        /* 태블릿 */
+        @media (max-width: 900px) {
+            .app {
+                margin: 16px;
+                padding: 16px;
+                border-radius: 18px;
+            }
+
+            .calendar {
+                gap: 8px;
+            }
+
+            .day, .empty-day {
+                min-height: 110px;
+                padding: 8px;
+                border-radius: 12px;
+            }
+
+            .day-number {
+                font-size: 14px;
+            }
+
+            .todo-title {
+                font-size: 11px;
+                padding: 3px 5px;
+            }
+        }
+
+        /* ✅ 모바일 */
+        @media (max-width: 480px) {
+            .week {
+                font-size: 12px;
+            }
+
+            .calendar {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .day, .empty-day {
+                min-height: 95px;
+                padding: 6px;
+            }
+
+            .day-number {
+                font-size: 13px;
+            }
+
+            .todo-title {
+                font-size: 10px;
+            }
+
+            .top-actions {
+                position: static;
+                justify-content: center;
+                margin-top: 10px;
+            }
+        }
     </style>
 </head>
+
 <body>
 
 <div class="app">
 
     <!-- ✅ 상단 -->
     <div class="header">
-
         <h2 th:text="|${loginUser.name}의 달력|">나의 달력</h2>
 
         <div class="top-actions">
-            <!-- 새 할 일 -->
             <a th:href="@{/todos/create}">
                 <button type="button" class="add-btn">+ 새 할 일</button>
             </a>
 
-            <!-- 로그아웃 -->
             <form th:action="@{/logout}" method="post">
                 <button type="submit" class="logout-btn">로그아웃</button>
             </form>
@@ -173,13 +231,12 @@
     <!-- ✅ 달력 -->
     <div class="calendar">
 
-        <!-- ✅ 1일 시작 요일만큼 앞에 빈칸 채우기 (0일 때 에러 방지) -->
+        <!-- ✅ 앞쪽 빈칸 -->
         <div th:if="${blankDaysBefore > 0}"
              th:each="i : ${#numbers.sequence(1, blankDaysBefore)}"
-             class="empty-day">
-        </div>
+             class="empty-day"></div>
 
-        <!-- ✅ 실제 날짜들 -->
+        <!-- ✅ 날짜 -->
         <div th:each="day : ${calendarDays}"
              class="day"
              th:classappend="${day.today}? 'today' : ''"
@@ -187,24 +244,18 @@
 
             <div class="day-number" th:text="${day.day}">1</div>
 
-            <!-- ✅ 해당 날짜 Todo 없음 -->
-            <div th:if="${#lists.isEmpty(day.todos)}"
-                 class="empty">
+            <div th:if="${#lists.isEmpty(day.todos)}" class="empty">
                 할 일 없음
             </div>
 
-            <!-- ✅ 해당 날짜 Todo 제목들 -->
             <div th:each="todo : ${day.todos}"
                  class="todo-title"
                  th:classappend="${todo.completed} ? 'completed' : ''"
                  th:text="${todo.title}">
                 제목
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 </body>

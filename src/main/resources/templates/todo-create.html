@@ -6,7 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
-        * { box-sizing: border-box; font-family: system-ui, sans-serif; }
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, sans-serif;
+        }
 
         body {
             margin: 0;
@@ -14,12 +17,13 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
+            padding: 16px;
         }
 
         .app {
             width: 100%;
             max-width: 420px;
-            margin-top: 50px;
+            margin-top: 40px;
             background: #fff;
             border-radius: 24px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
@@ -29,6 +33,11 @@
         .header {
             text-align: center;
             margin-bottom: 24px;
+        }
+
+        .header h2 {
+            margin: 0;
+            font-size: 22px;
         }
 
         label {
@@ -45,6 +54,11 @@
             border: 1px solid #ddd;
             font-size: 14px;
             margin-bottom: 16px;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #111;
         }
 
         textarea {
@@ -74,7 +88,14 @@
             border-radius: 14px;
             border: none;
             font-weight: 600;
+            font-size: 14px;
             cursor: pointer;
+            transition: transform 0.15s, opacity 0.15s;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            opacity: 0.9;
         }
 
         .save-btn {
@@ -84,9 +105,39 @@
 
         .cancel-btn {
             background: #eee;
+            color: #333;
+        }
+
+        a {
+            text-decoration: none;
+            flex: 1;
+        }
+
+        /* ✅ ✅ 모바일 반응형 */
+        @media (max-width: 480px) {
+            .app {
+                padding: 22px;
+                border-radius: 18px;
+                margin-top: 20px;
+            }
+
+            .header h2 {
+                font-size: 20px;
+            }
+
+            input, textarea {
+                padding: 11px;
+                font-size: 13px;
+            }
+
+            button {
+                padding: 12px;
+                font-size: 13px;
+            }
         }
     </style>
 </head>
+
 <body>
 
 <div class="app">
@@ -117,7 +168,8 @@
 
         <div class="buttons">
             <button type="submit" class="save-btn">저장</button>
-            <a th:href="@{/dashboard}" style="flex:1;">
+
+            <a th:href="@{/dashboard}">
                 <button type="button" class="cancel-btn">취소</button>
             </a>
         </div>

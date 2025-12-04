@@ -4,36 +4,110 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
-        * { box-sizing: border-box; font-family: system-ui, sans-serif; }
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, sans-serif;
+        }
+
         body {
             margin: 0;
-            height: 100vh;
+            min-height: 100vh;
             background: linear-gradient(135deg, #111, #444);
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 16px;
         }
+
         .box {
-            width: 360px;
+            width: 100%;
+            max-width: 360px;
             background: #fff;
             padding: 36px;
             border-radius: 24px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.25);
         }
-        h2 { text-align: center; margin-bottom: 26px; }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 26px;
+            font-size: 22px;
+        }
+
         input {
-            width: 100%; padding: 12px; border-radius: 10px;
-            border: 1px solid #ddd; margin-bottom: 14px;
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 14px;
+            font-size: 14px;
         }
+
+        input:focus {
+            outline: none;
+            border-color: #111;
+        }
+
         button {
-            width: 100%; padding: 14px; border-radius: 12px;
-            border: none; background: #111; color: #fff;
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            background: #111;
+            color: #fff;
             font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.15s, opacity 0.15s;
         }
-        .link { margin-top: 16px; text-align: center; font-size: 13px; }
+
+        button:hover {
+            transform: translateY(-1px);
+            opacity: 0.9;
+        }
+
+        .link {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .link a {
+            color: #111;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+
+        /* ✅ ✅ 모바일 반응형 */
+        @media (max-width: 480px) {
+            .box {
+                padding: 26px;
+                border-radius: 18px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            input {
+                padding: 11px;
+                font-size: 13px;
+            }
+
+            button {
+                padding: 12px;
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
+
 <body>
 
 <div class="box">
@@ -43,6 +117,7 @@
     <form th:action="@{/login}" method="post">
         <input type="text" name="username" placeholder="아이디" required>
         <input type="password" name="password" placeholder="비밀번호" required>
+
         <button type="submit">로그인</button>
     </form>
 
