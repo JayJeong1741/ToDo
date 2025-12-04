@@ -54,6 +54,7 @@
             border: 1px solid #ddd;
             font-size: 14px;
             margin-bottom: 16px;
+            background: #fff;
         }
 
         input:focus, textarea:focus {
@@ -66,6 +67,7 @@
             height: 90px;
         }
 
+        /* ✅ 날짜/시간 공통 정렬 박스 */
         .time-box {
             display: flex;
             gap: 10px;
@@ -75,6 +77,20 @@
 
         .time-box input {
             flex: 1;
+        }
+
+        /* ✅ ✅ date input 정렬/높이 보정 (핵심 패치) */
+        input[type="date"] {
+            appearance: none;
+            -webkit-appearance: none;
+            height: 48px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* ✅ iOS 사파리 전용 미세 보정 */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            margin-top: 2px;
         }
 
         .buttons {
@@ -156,9 +172,13 @@
         <label>설명</label>
         <textarea th:field="*{description}"></textarea>
 
+        <!-- ✅ 날짜 (time-box 구조로 통일 + 정렬 완벽 보정) -->
         <label>날짜</label>
-        <input type="date" th:field="*{dueDate}" required>
+        <div class="time-box">
+            <input type="date" th:field="*{dueDate}" required>
+        </div>
 
+        <!-- ✅ 시간 -->
         <label>시간</label>
         <div class="time-box">
             <input type="time" th:field="*{startTime}" required>
